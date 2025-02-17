@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  colored_print: ^1.0.0  
   encryptify:
     path: packages/encryptify
 
