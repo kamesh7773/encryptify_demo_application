@@ -2,6 +2,7 @@ import 'package:encryptify/encryptify.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  // When application starts, generate RSA keys
   EncryptionDecryption.generateKeys(); // Generate RSA keys
 
   runApp(const MyApp());
@@ -12,7 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Encryptify Example', home: MyHomePage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Encryptify Example',
+      home: MyHomePage(),
+    );
   }
 }
 
@@ -24,39 +29,48 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() async {
-    EncryptionDecryption.messageEncryptionAndDecryption(
-      message: "Hello World",
-      customString: "customString",
-    );
-
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Encryptify Demo App")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text("Encryptify Demo"),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple[200],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      body: StreamBuilder(
+        stream: null,
+        builder: (context, snapshot) {
+          // if snapshot data is loading, then we show the loading indicator
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          // if snapshot has data, show it
+          if (snapshot.hasData) {
+            return Center(
+              child: Text(
+                snapshot.data.toString(),
+              ),
+            );
+          }
+
+          // if snapshot has error, show it
+          if (snapshot.hasError) {
+            return Text(
+              snapshot.error.toString(),
+            );
+          }
+
+          // if snapshot is empty, show this
+          return Center(
+            child: Text(
+              "Snapshot is empty",
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
