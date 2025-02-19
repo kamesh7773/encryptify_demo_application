@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "577172201749",
+    "project_id": "encryptify-1510a",
+    "storage_bucket": "encryptify-1510a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577172201749:android:1ad74f5090b4688be7c91c",
+        "android_client_info": {
+          "package_name": "com.example.encryptify_demo_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAnkUBPLR1X06q3MhuXhsNBcaRG07zuKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
