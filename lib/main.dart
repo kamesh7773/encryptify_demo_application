@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Encryptify Demo"),
+        title: Text("Encryptify Package"),
         centerTitle: true,
         backgroundColor: Colors.deepPurple[200],
       ),
