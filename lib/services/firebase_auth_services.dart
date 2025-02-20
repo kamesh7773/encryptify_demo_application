@@ -43,7 +43,7 @@ class FirebaseAuthMethod {
     }
     // Handling Login auth Exceptions
     on FirebaseAuthException catch (error) {
-      if (error.message == "A network error (such as timeout, interrupted connection or unreachable host) has occurred." && context.mounted) {
+      if (error.message == "A network error (such as timeout, interrupted connection or unreachable ) has occurred." && context.mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
