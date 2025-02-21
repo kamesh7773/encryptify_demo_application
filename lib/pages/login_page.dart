@@ -9,14 +9,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late final TextEditingController emailController;
-  late final TextEditingController passwordController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   // Border Properties
@@ -48,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
-                controller: emailController,
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText: "Email",
                   enabledBorder: border,
@@ -60,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
-                controller: passwordController,
+                controller: _passwordController,
                 decoration: InputDecoration(
                   hintText: "Password",
                   enabledBorder: border,
@@ -72,8 +79,8 @@ class _LoginPageState extends State<LoginPage> {
             ElevatedButton(
               onPressed: () {
                 FirebaseAuthMethod.signInWithEmail(
-                  email: emailController.text,
-                  password: passwordController.text,
+                  email: _emailController.text,
+                  password: _passwordController.text,
                   context: context,
                 );
               },
