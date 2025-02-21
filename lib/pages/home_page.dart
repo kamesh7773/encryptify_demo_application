@@ -1,4 +1,3 @@
-import 'package:colored_print/colored_print.dart';
 import 'package:encryptify_demo_application/models/message_model.dart';
 import 'package:encryptify_demo_application/services/firebase_auth_services.dart';
 import 'package:encryptify_demo_application/widgets/chat_bubble.dart';
@@ -114,53 +113,40 @@ class _HomePageState extends State<HomePage> {
                       width: 2,
                     ),
                   ),
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      // Convert the snapshot data into a List<MessageModel>
-                      final List<MessageModel> data = snapshot.data as List<MessageModel>;
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          key: _listKey,
+                          // Set reverse to true so the ListView starts from the bottom, automatically scrolling to the last message when the user enters the chat page.
+                          reverse: true,
+                          padding: EdgeInsets.zero,
+                          // itemCount: data.length,
+                          itemCount: 1,
+                          itemBuilder: (context, index) {
+                            // When reverse: true is used, adjust the data indexing to match the reversed scroll order, ensuring the most recent messages are displayed correctly.
+                            // final reverseIndex = data.length - 1 - index;
 
-                      // When reverse: true is used, adjust the data indexing to match the reversed scroll order, ensuring the most recent messages are displayed correctly.
-                      final reverseIndex = data.length - 1 - index;
+                            // // Get messages by index.
+                            // final message = data[reverseIndex];
 
-                      // Get messages by index.
-                      final message = data[reverseIndex];
+                            // // Check if the current user is the sender.
+                            // var isCurrentUser = message.senderID == _auth.currentUser!.uid;
 
-                      // Check if the current user is the sender.
-                      var isCurrentUser = message.senderID == _auth.currentUser!.uid;
+                            // Render regular chat bubbles for non-call messages
+                            // return Chatbubble(
+                            //   message: message.message,
+                            //   isCurrentUser: isCurrentUser,
+                            //   timestamp: message.timestamp,
+                            //   isMessageSeen: message.isSeen,
+                            // );
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              key: _listKey,
-                              // Set reverse to true so the ListView starts from the bottom, automatically scrolling to the last message when the user enters the chat page.
-                              reverse: true,
-                              padding: EdgeInsets.zero,
-                              itemCount: data.length,
-                              itemBuilder: (context, index) {
-                                // When reverse: true is used, adjust the data indexing to match the reversed scroll order, ensuring the most recent messages are displayed correctly.
-                                final reverseIndex = data.length - 1 - index;
-
-                                // Get messages by index.
-                                final message = data[reverseIndex];
-
-                                // Check if the current user is the sender.
-                                var isCurrentUser = message.senderID == _auth.currentUser!.uid;
-
-                                // Render regular chat bubbles for non-call messages
-                                return Chatbubble(
-                                  message: message.message,
-                                  isCurrentUser: isCurrentUser,
-                                  timestamp: message.timestamp,
-                                  isMessageSeen: message.isSeen,
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      );
-                    },
+                            return Text("Chat bubble");
+                          },
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
