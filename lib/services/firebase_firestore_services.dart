@@ -25,6 +25,7 @@ class FirebaseFireStoreMethods {
 
       final recipientPublicKey = data["rsaPublicKey"];
 
+      //* By using the Encryptify package, we can encrypt the message using the recipient's public key.
       final encryptedData = await Encryptify.encryptMessage(message: message, recipientRSAPublicKey: recipientPublicKey);
 
       MessageModel newMessage = MessageModel(
@@ -67,6 +68,7 @@ class FirebaseFireStoreMethods {
             final String encryptedAESKey = data['encryptedAESKey'];
             final String encryptedIV = data['encryptedIV'];
 
+            //* By using the Encryptify package, we can decrypt the message using the current user's private key.
             final String decryptedMessage = await Encryptify.decryptMessage(
               currentUserID: _auth.currentUser!.uid,
               senderID: senderID,

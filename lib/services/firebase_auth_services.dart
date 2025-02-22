@@ -38,18 +38,17 @@ class FirebaseAuthMethod {
         },
       );
 
-      //* 1st step genrating the RSA key Pair (Public & Private) and AES key and IV
+      //* 1st step By using the generateKeys() method we generate the RSA Public and Private Key's and AES Key and IV.
       await Encryptify.generateKeys();
 
-      //* 2nd step retriving the Key's from returnKeys() Method.
+      //* 2nd step By using the returnKeys() method we get the RSA Key Pairs and AES Key and IV.
       final keyData = await Encryptify.returnKeys();
 
       //* 3rd step creating the user account on firebase using email & password
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
-      //* 4th step Encrypting the RSA Private Key, AES Key and IV of current user using the creationTime (creationTime usead as custom String for encryption).
-      //* (if you are using the Google OAuth Provider then you can use the sub/id string from userCredentail Data or if you are using the FB Auth then you can use
-      //*  the id string from userCredentail Data and almost all the Firebase Auth Provider contains the ID/Sub).
+      //* 4th step By using the Encryptify Package we encrypt the RSA Private Key, AES Key and IV of current user using the creationTime (creationTime usead as custom String for encryption).
+      //* (if you are using the Google OAuth Provider then you can use the sub/id string from userCredentail Data or if you are using the FB Auth then you can use the ID string from userCredentail Data).
       final encryptedData = await Encryptify.encryptionWithCustomString(customString: _auth.currentUser!.metadata.creationTime.toString());
 
       //* 5th step seting the current user info to firestore database collection.
