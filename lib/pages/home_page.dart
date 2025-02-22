@@ -1,7 +1,7 @@
-import 'package:encryptify_demo_application/models/message_model.dart';
-import 'package:encryptify_demo_application/services/firebase_auth_services.dart';
-import 'package:encryptify_demo_application/services/firebase_firestore_services.dart';
-import 'package:encryptify_demo_application/widgets/chat_bubble.dart';
+import '../models/message_model.dart';
+import '../services/firebase_auth_services.dart';
+import '../services/firebase_firestore_services.dart';
+import '../widgets/chat_bubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

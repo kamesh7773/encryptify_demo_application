@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:encryptify/encryptify.dart';
-import 'package:encryptify_demo_application/pages/home_page.dart';
-import 'package:encryptify_demo_application/pages/sign_in_page.dart';
+import '../pages/home_page.dart';
+import '../pages/sign_in_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -47,15 +47,12 @@ class FirebaseAuthMethod {
       //* 3rd step creating the user account on firebase using email & password
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
-      //* 4th step Fetching the creationTime from the Email Password Provider (this will be used as a Custom String to encrypt the RSA Private Key, AES Key and IV).
+      //* 4th step Encrypting the RSA Private Key, AES Key and IV of current user using the creationTime (creationTime usead as custom String for encryption).
       //* (if you are using the Google OAuth Provider then you can use the sub/id string from userCredentail Data or if you are using the FB Auth then you can use
-      //*  the uid string from userCredentail Data).
-      final String creationTime = _auth.currentUser!.metadata.creationTime.toString();
+      //*  the id string from userCredentail Data and almost all the Firebase Auth Provider contains the ID/Sub).
+      final encryptedData = await Encryptify.encryptionWithCustomString(customString: _auth.currentUser!.metadata.creationTime.toString());
 
-      //* 5th step Encrypting the RSA Private Key, AES Key and IV using the creationTime (custom String).
-      final encryptedData = await Encryptify.encryptionWithCustomString(customString: creationTime);
-
-      //* 6th step seting the current user info to firestore database collection.
+      //* 5th step seting the current user info to firestore database collection.
       await _firestoreDB.collection("users").doc(_auth.currentUser!.uid).set({
         "userID": _auth.currentUser!.uid,
         "name": fullName,
@@ -136,6 +133,7 @@ class FirebaseAuthMethod {
       final userDoc = await _firestoreDB.collection("users").doc(_auth.currentUser!.uid).get();
 
       //* 3rd step we decrypt the RSA Private Key, AES Key and IV using the creationTime (custom String).
+      //* (this decryptionWithCustomString method also update the RSA Private Key, AES Key and IV in the Encryptify class).
       await Encryptify.decryptionWithCustomString(
         pemRSAPublicKey: userDoc["rsaPublicKey"],
         encryptedRsaPrivateKey: userDoc["encryptedRsaPrivateKey"],
@@ -202,6 +200,9 @@ class FirebaseAuthMethod {
     try {
       // This method SignOut user from all firebase auth Provider's
       await _auth.signOut();
+
+      //* deleting the RSA Private Key, AES Key and IV from the Encryptify class
+      await Encryptify.flushKeys();
 
       // After SignOut redirecting user to LoginPage
       if (context.mounted) {
