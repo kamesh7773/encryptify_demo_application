@@ -168,15 +168,28 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   child: SingleChildScrollView(
-                    child: Text(
-                      "Users sign up by generating an RSA key pair and an AES key with an Initialization Vector (IV). The RSA private key, AES key, and IV are securely stored locally, while the RSA public key is uploaded to Firebase Firestore. Sensitive keys are encrypted using a user-derived custom string and also stored in Firestore. When sending a message, the sender encrypts it with the AES key and IV, then encrypts the AES key and IV using the recipient’s RSA public key from Firestore. The encrypted message, AES key, and IV are sent to the recipient. To decrypt, the recipient uses their RSA private key to decrypt the AES key and IV, then decrypts the message. If the app is reinstalled or data is lost, the user retrieves the encrypted keys from Firestore, decrypts them using the custom string, and restores them to continue messaging seamlessly.",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                      child: Column(
+                    children: [
+                      Text(
+                        "W O R K I N G",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.black,
+                          decorationThickness: 2,
+                        ),
                       ),
-                    ),
-                  ),
+                      Text(
+                        "Users sign up by generating an RSA key pair and an AES key with an Initialization Vector (IV). The RSA private key, AES key, and IV are securely stored locally, while the RSA public key is uploaded to Firebase Firestore. Sensitive keys are encrypted using a user-derived custom string and also stored in Firestore. When sending a message, the sender encrypts it with the AES key and IV, then encrypts the AES key and IV using the recipient’s RSA public key from Firestore. The encrypted message, AES key, and IV are sent to the recipient. To decrypt, the recipient uses their RSA private key to decrypt the AES key and IV, then decrypts the message. If the app is reinstalled or data is lost, the user retrieves the encrypted keys from Firestore, decrypts them using the custom string, and restores them to continue messaging seamlessly.",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )),
                 ),
               ],
             );
