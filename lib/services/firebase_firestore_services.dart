@@ -110,4 +110,25 @@ class FirebaseFireStoreMethods {
       throw Exception("Failed to update message: ${error.toString()}");
     }
   }
+
+  //! Method that update the message isEncrypted feild to false
+  Future<void> deleteMessage({
+    required String otherUserID,
+    required String messageID, // The document ID of the message
+  }) async {
+    try {
+      // Generate the chatRoomID
+      List<String> ids = [_auth.currentUser!.uid, otherUserID];
+      ids.sort();
+      String chatRoomID = ids.join("_");
+
+      // Reference the specific message document
+      final DocumentReference messageDoc = _db.collection(chatRoomsCollection).doc(chatRoomID).collection(messagesCollection).doc(messageID);
+
+      // Update the document
+      await messageDoc.delete();
+    } catch (error) {
+      throw Exception("Failed to update message: ${error.toString()}");
+    }
+  }
 }

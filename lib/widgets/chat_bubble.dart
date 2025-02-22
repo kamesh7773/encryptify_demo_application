@@ -44,22 +44,17 @@ class _ChatbubbleState extends State<Chatbubble> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: widget.isCurrentUser
-                    ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.end, // Align text and time
-                        mainAxisSize: MainAxisSize.min, // Shrink-wrap the content
-                        children: [
-                          Flexible(
-                            child: SelectableText(
-                              widget.message,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
+                    ? GestureDetector(
+                        onLongPress: () {
+                          FirebaseFireStoreMethods().deleteMessage(otherUserID: widget.otherUserID, messageID: widget.messageID);
+                        },
+                        child: Text(
+                          widget.message,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
                           ),
-
-                          const SizedBox(width: 4), // Spacing between message and timestamp
-                        ],
+                        ),
                       )
                     : widget.isEncrypted
                         ? GestureDetector(
@@ -87,19 +82,14 @@ class _ChatbubbleState extends State<Chatbubble> {
                               ),
                             ),
                           )
-                        : Row(
-                            crossAxisAlignment: CrossAxisAlignment.end, // Align text and time
-                            mainAxisSize: MainAxisSize.min, // Shrink-wrap the content
-                            children: [
-                              Flexible(
-                                child: SelectableText(
-                                  widget.message,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ),
-
-                              const SizedBox(width: 4), // Spacing between message and timestamp
-                            ],
+                        : GestureDetector(
+                            onLongPress: () {
+                              FirebaseFireStoreMethods().deleteMessage(otherUserID: widget.otherUserID, messageID: widget.messageID);
+                            },
+                            child: Text(
+                              widget.message,
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
               ),
             ),
