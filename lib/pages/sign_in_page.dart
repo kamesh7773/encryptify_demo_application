@@ -1,14 +1,14 @@
 import 'package:encryptify_demo_application/services/firebase_auth_services.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignInPageState extends State<SignInPage> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
@@ -74,6 +74,31 @@ class _LoginPageState extends State<LoginPage> {
                   focusedBorder: border,
                 ),
               ),
+            ),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/sign_up_page");
+                  },
+                  child: Text(
+                    " Sign up",
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 120, 87, 182),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20.0),
             ElevatedButton(

@@ -1,64 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageModel {
+  final String messageID;
+  final String message;
   final String senderID;
   final String reciverID;
-  final String message;
-  final bool? isVideoCall;
-  final String? callerID;
+  final Timestamp timestamp;
   final String encryptedAESKey;
   final String encryptedIV;
-  final bool isSeen;
-  final Timestamp timestamp;
+  final bool isEncrypted;
 
   MessageModel({
+    required this.messageID,
+    required this.message,
     required this.senderID,
     required this.reciverID,
-    required this.message,
-    this.isVideoCall,
-    this.callerID,
+    required this.timestamp,
     required this.encryptedAESKey,
     required this.encryptedIV,
-    required this.isSeen,
-    required this.timestamp,
+    required this.isEncrypted,
   });
 
   // Convert to a Map
   Map<String, dynamic> toMap() {
     return {
+      "messageID": messageID,
+      "message": message,
       "senderID": senderID,
       "reciverID": reciverID,
-      "message": message,
-      "isVideoCall": isVideoCall,
-      "callerID": callerID,
+      "timestamp": timestamp,
       "encryptedAESKey": encryptedAESKey,
       "encryptedIV": encryptedIV,
-      "isSeen": isSeen,
-      "timestamp": timestamp,
+      "isEncrypted": isEncrypted,
     };
   }
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
+        messageID: json["messageID"],
+        message: json["message"],
         senderID: json["senderID"],
         reciverID: json["reciverID"],
-        message: json["message"],
-        isVideoCall: json["isVideoCall"],
-        callerID: json["callerID"],
+        timestamp: json["timestamp"],
         encryptedAESKey: json["encryptedAESKey"],
         encryptedIV: json["encryptedIV"],
-        isSeen: json["isSeen"],
-        timestamp: json["timestamp"],
+        isEncrypted: json["isEncrypted"],
       );
 
   Map<String, dynamic> toJson() => {
+        "messageID": messageID,
+        "message": message,
         "senderID": senderID,
         "reciverID": reciverID,
-        "message": message,
-        "isVideoCall": isVideoCall,
-        "callerID": callerID,
+        "timestamp": timestamp,
         "encryptedAESKey": encryptedAESKey,
         "encryptedIV": encryptedIV,
-        "isSeen": isSeen,
-        "timestamp": timestamp,
+        "isEncrypted": isEncrypted,
       };
 }

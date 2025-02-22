@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encryptify/encryptify.dart';
 import 'package:encryptify_demo_application/models/message_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,43 +15,34 @@ class FirebaseFireStoreMethods {
   //! Sends a message to a user.
   Future<void> sendMessage({
     required String receiverID,
+    required String messageID,
     required String message,
-    required String recipientPublicKey,
   }) async {
-    final String currentUserID = _auth.currentUser!.uid;
-    final Timestamp timestamp = Timestamp.now();
-    final DocumentReference<Map<String, dynamic>> receiverDoc = _db.collection(usersCollection).doc(receiverID);
-
     try {
+      final DocumentReference<Map<String, dynamic>> receiverDoc = _db.collection(usersCollection).doc(receiverID);
+
       final data = (await receiverDoc.get()).data()!;
 
-      // Parse the recipient's RSA public key from PEM format.
-      RsaKeyHelper helper = RsaKeyHelper();
-      final RSAPublicKey publicKey = helper.parsePublicKeyFromPem(recipientPublicKey);
+      final recipientPublicKey = data["rsaPublicKey"];
 
-      // Encrypt the message using AES
-      final result = await MessageEncrptionService().messageEncryption(message: message);
-
-      // Encrypt AES Key & IV using the recipient's public RSA key
-      String encryptedAESKey = MessageEncrptionService().rsaEncrypt(data: result.aesKey.bytes, publicKey: publicKey);
-      String encryptedIV = MessageEncrptionService().rsaEncrypt(data: result.iv.bytes, publicKey: publicKey);
+      final encryptedData = await Encryptify.encryptMessage(message: message, recipientRSAPublicKey: recipientPublicKey);
 
       MessageModel newMessage = MessageModel(
-        senderID: currentUserID,
+        messageID: messageID,
+        message: encryptedData.encryptedMessage,
+        senderID: _auth.currentUser!.uid,
         reciverID: receiverID,
-        isVideoCall: null,
-        message: result.encryptedMessage,
-        encryptedAESKey: encryptedAESKey,
-        encryptedIV: encryptedIV,
-        isSeen: true,
-        timestamp: timestamp,
+        timestamp: Timestamp.now(),
+        encryptedAESKey: encryptedData.encryptedAesKey,
+        encryptedIV: encryptedData.encryptedIV,
+        isEncrypted: true,
       );
 
-      List<String> ids = [currentUserID, receiverID];
+      List<String> ids = [_auth.currentUser!.uid, receiverID];
       ids.sort();
       String chatRoomID = ids.join("_");
 
-      await _db.collection(usersCollection).doc(chatRoomID).collection(messagesCollection).add(newMessage.toMap());
+      await _db.collection(chatRoomsCollection).doc(chatRoomID).collection("messages").doc(messageID).set(newMessage.toJson());
     } catch (error) {
       throw Exception(error.toString());
     }
@@ -75,12 +67,12 @@ class FirebaseFireStoreMethods {
             final String encryptedAESKey = data['encryptedAESKey'];
             final String encryptedIV = data['encryptedIV'];
 
-            final String decryptedMessage = await MessageEncrptionService().messageDecryption(
+            final String decryptedMessage = await Encryptify.decryptMessage(
               currentUserID: _auth.currentUser!.uid,
               senderID: senderID,
               encryptedMessage: encryptedMessage,
-              encryptedAESKey: encryptedAESKey,
-              encryptedIV: encryptedIV,
+              recipientencryptedAESKey: encryptedAESKey,
+              recipientencryptedIV: encryptedIV,
             );
 
             data['message'] = decryptedMessage;
@@ -93,6 +85,29 @@ class FirebaseFireStoreMethods {
       });
     } catch (error) {
       throw Exception(error.toString());
+    }
+  }
+
+  //! Method that update the message isEncrypted feild to false
+  Future<void> updateMessage({
+    required String otherUserID,
+    required String messageID, // The document ID of the message
+  }) async {
+    try {
+      // Generate the chatRoomID
+      List<String> ids = [_auth.currentUser!.uid, otherUserID];
+      ids.sort();
+      String chatRoomID = ids.join("_");
+
+      // Reference the specific message document
+      final DocumentReference messageDoc = _db.collection(chatRoomsCollection).doc(chatRoomID).collection(messagesCollection).doc(messageID);
+
+      // Update the document
+      await messageDoc.update({
+        "isEncrypted": false,
+      });
+    } catch (error) {
+      throw Exception("Failed to update message: ${error.toString()}");
     }
   }
 }
